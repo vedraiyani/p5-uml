@@ -1,5 +1,6 @@
 class Column {
   constructor(colour) {
+    this.addVisible = false;
     this.text = '';
     this.pos = createVector(0, 0);
     this.w = 50;
@@ -26,6 +27,9 @@ class Column {
   }
 
   getDraggable(pos) {
+    if (pos.dist(createVector(this.pos.x + this.w, this.pos.y)) < 12) {
+      return "column.add";
+    }
     if (pos.dist(createVector(this.pos.x + this.w, this.pos.y + this.h / 2)) < 8) {
       connecting = true;
       return this.dragObj;
@@ -142,5 +146,27 @@ class Column {
     fill(255);
     text(this.text, x + 7, y + 5, w - 12, h);
     this.drawDot(x, y, w, h);
+
+    if((mouseX>this.realPos.x && mouseX<this.realPos.x+this.w && mouseY>this.realPos.y && mouseY<this.realPos.y+this.h)
+        ||(this.addVisible && view.worldMouse.dist(createVector(this.realPos.x + this.w, this.realPos.y)) < 12)){
+      this.addVisible = true;
+      
+      // circle
+      stroke(20, 20, 20, 160);
+      fill(255);
+      ellipse(this.realPos.x+this.w, this.realPos.y, 12,12);
+      
+      // cross
+      strokeWeight(2);
+      line(this.realPos.x+this.w, this.realPos.y-3, this.realPos.x+this.w,this.realPos.y+3);
+      line(this.realPos.x+this.w-3, this.realPos.y, this.realPos.x+this.w+3,this.realPos.y);
+      
+      //arc
+      noFill();
+      stroke(this.colour);
+      arc(x + w, y, 12, 12, HALF_PI, PI)
+    } else {
+      this.addVisible = false;
+    }
   }
 }

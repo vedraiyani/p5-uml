@@ -10,8 +10,8 @@ class Table {
     this.columns = [new Column(this.colour), new Column()];
     this.dragging = false;
     this.shouldGlow = false;
-    const colnum = floor(random(5));
-    for (let i = 0; i < colnum; i++) {
+    this.colnum = floor(random(5));
+    for (let i = 0; i < this.colnum; i++) {
       this.columns.push(new Column());
     }
     this.text = random([
@@ -29,6 +29,11 @@ class Table {
     for (let i = 0; i < this.columns.length; i++) {
       const coldrag = this.columns[i].getDraggable(pos);
       if (coldrag !== null && coldrag !== undefined) {
+        if(typeof(coldrag)=='string'){   
+          this.colnum++;
+          this.columns.push(new Column());
+          return null;
+        }
         return coldrag;
       }
     }
@@ -37,7 +42,7 @@ class Table {
         return this;
       }
     }
-    return null;
+    return null;  
   }
 
   mouseOver(pos) {
